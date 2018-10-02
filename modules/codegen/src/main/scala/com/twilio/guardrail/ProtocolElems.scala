@@ -42,6 +42,8 @@ object ProtocolElems {
                     RandomType(name, tpe)
                   case EnumDefinition(name, tpe, elems, cls, companion) =>
                     RandomType(name, tpe)
+                  case ADT(name, tpe, _, _) =>
+                    RandomType(name, tpe)
                 })
                 .getOrElse(d)
             case d @ DeferredArray(name) =>
@@ -54,6 +56,8 @@ object ProtocolElems {
                     RandomType(name, t"IndexedSeq[${tpe}]")
                   case EnumDefinition(name, tpe, elems, cls, companion) =>
                     RandomType(name, t"IndexedSeq[${tpe}]")
+                  case ADT(name, tpe, _, _) =>
+                    RandomType(name, t"IndexedSeq[$tpe]")
                 })
                 .getOrElse(d)
             case d @ DeferredMap(name) =>
@@ -66,6 +70,8 @@ object ProtocolElems {
                     RandomType(name, t"Map[String, ${tpe}]")
                   case EnumDefinition(name, tpe, elems, cls, companion) =>
                     RandomType(name, t"Map[String, ${tpe}]")
+                  case ADT(name, tpe, _, _) =>
+                    RandomType(name, t"Map[String, $tpe]")
                 })
                 .getOrElse(d)
           }
