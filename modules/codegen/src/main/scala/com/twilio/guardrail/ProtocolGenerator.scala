@@ -10,6 +10,7 @@ import java.util.Locale
 
 import com.twilio.guardrail.generators.GeneratorSettings
 import com.twilio.guardrail.protocol.terms.protocol._
+import com.twilio.guardrail.swagger.SwaggerUtil
 import com.twilio.guardrail.terms.framework.FrameworkTerms
 
 import scala.collection.JavaConverters._

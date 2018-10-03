@@ -1,9 +1,9 @@
-package tests.core.issues
+package core.issues
 
+import com.twilio.guardrail._
 import com.twilio.guardrail.generators.AkkaHttp
 import com.twilio.guardrail.tests._
-import com.twilio.guardrail._
-import org.scalatest.{ FunSpec, FunSuite, Matchers }
+import org.scalatest.{ FunSpec, Matchers }
 import support.SwaggerSpecRunner
 
 import scala.meta._
