@@ -272,7 +272,7 @@ class Issue43 extends FunSpec with Matchers with SwaggerSpecRunner {
 
     it("should generate right case class") {
       clsDog.structure shouldBe q"""case class Dog(name: String, packSize: Int = 0) extends Pet""".structure
-      clsPersianCat.structure shouldBe q"""case class PersianCat(huntingSkill: String = "lazy", name: String, wool: Option[Int] = Option(10)) extends Cat""".structure
+      clsPersianCat.structure shouldBe q"""case class PersianCat(name: String, huntingSkill: String = "lazy", wool: Option[Int] = Option(10)) extends Cat""".structure
     }
 
     it("should generate right companion object") {
@@ -290,9 +290,9 @@ class Issue43 extends FunSpec with Matchers with SwaggerSpecRunner {
         """object PersianCat {
           |  implicit val encodePersianCat = {
           |    val readOnlyKeys = Set[String]()
-          |    Encoder.forProduct3("huntingSkill", "name", "wool") { (o: PersianCat) => (o.huntingSkill, o.name, o.wool) }.mapJsonObject(_.filterKeys(key => !(readOnlyKeys contains key)))
+          |    Encoder.forProduct3("name", "huntingSkill", "wool") { (o: PersianCat) => (o.name, o.huntingSkill, o.wool) }.mapJsonObject(_.filterKeys(key => !(readOnlyKeys contains key)))
           |  }
-          |  implicit val decodePersianCat = Decoder.forProduct3("huntingSkill", "name", "wool")(PersianCat.apply _)
+          |  implicit val decodePersianCat = Decoder.forProduct3("name", "huntingSkill", "wool")(PersianCat.apply _)
           |}
           |
           |""".stripMargin.replaceAll("\n", "")

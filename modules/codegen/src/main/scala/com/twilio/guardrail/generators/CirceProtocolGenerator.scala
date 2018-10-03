@@ -167,7 +167,7 @@ object CirceProtocolGenerator {
       case RenderDTOClass(clsName, selfTerms, parents) =>
         val discriminator = parents.find(_.discriminator.isDefined).flatMap(_.discriminator) //collectFirst { case SuperClass(_, _, _, Some(discriminator)) => discriminator }
         val parentNameOpt = parents.headOption.map(_.clsName)
-        val terms = (parents.flatMap(_.params.map(_.term)) ++ selfTerms).filterNot(
+        val terms = (parents.reverse.flatMap(_.params.map(_.term)) ++ selfTerms).filterNot(
           param => discriminator.contains(param.name.value)
         )
         val code = parentNameOpt
@@ -180,7 +180,7 @@ object CirceProtocolGenerator {
 
       case EncodeModel(clsName, needCamelSnakeConversion, selfParams, parents) =>
         val discriminator = parents.find(_.discriminator.isDefined).flatMap(_.discriminator)
-        val params = (parents.flatMap(_.params) ++ selfParams).filterNot(
+        val params = (parents.reverse.flatMap(_.params) ++ selfParams).filterNot(
           param => discriminator.contains(param.name)
         )
         val readOnlyKeys: List[String] = params.flatMap(_.readOnlyKey).toList
@@ -234,7 +234,7 @@ object CirceProtocolGenerator {
 
       case DecodeModel(clsName, needCamelSnakeConversion, selfParams, parents) =>
         val discriminator = parents.find(_.discriminator.isDefined).flatMap(_.discriminator)
-        val params = (parents.flatMap(_.params) ++ selfParams).filterNot(
+        val params = (parents.reverse.flatMap(_.params) ++ selfParams).filterNot(
           param => discriminator.contains(param.name)
         )
         val emptyToNullKeys: List[String] = params.flatMap(_.emptyToNullKey).toList
