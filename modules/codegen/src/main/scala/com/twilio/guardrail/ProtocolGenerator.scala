@@ -10,7 +10,6 @@ import java.util.Locale
 
 import com.twilio.guardrail.generators.GeneratorSettings
 import com.twilio.guardrail.protocol.terms.protocol._
-import com.twilio.guardrail.swagger.SwaggerUtil
 import com.twilio.guardrail.terms.framework.FrameworkTerms
 
 import scala.collection.JavaConverters._
@@ -294,6 +293,7 @@ object ProtocolGenerator {
   ): Free[F, ProtocolDefinitions] = {
     import S._
     import F._
+    import P._
 
     val definitions = Option(swagger.getDefinitions).toList.flatMap(_.asScala)
     val hierarchies = groupHierarchies(definitions)
@@ -340,7 +340,9 @@ object ProtocolGenerator {
       protoImports      <- protocolImports
       pkgImports        <- packageObjectImports
       pkgObjectContents <- packageObjectContents
-      strictElems = ProtocolElems.resolve(elems).right.get
-    } yield ProtocolDefinitions(strictElems, protoImports, pkgImports, pkgObjectContents)
+
+      polyADTElems                           = ProtocolElems.resolve(polyADTs).right.get
+      strictElems: List[StrictProtocolElems] = ProtocolElems.resolve(elems).right.get
+    } yield ProtocolDefinitions(strictElems ++ polyADTElems, protoImports, pkgImports, pkgObjectContents)
   }
 }

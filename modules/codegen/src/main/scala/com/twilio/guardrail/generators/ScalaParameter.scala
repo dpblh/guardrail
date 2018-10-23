@@ -8,7 +8,6 @@ import java.util.Locale
 import scala.meta._
 import cats.syntax.traverse._
 import cats.instances.all._
-import com.twilio.guardrail.swagger.SwaggerUtil
 
 class GeneratorSettings(val fileType: Type, val jsonType: Type)
 case class RawParameterName private[generators] (value: String) {

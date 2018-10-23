@@ -410,16 +410,16 @@ class Issue43 extends FunSpec with Matchers with SwaggerSpecRunner {
 
     val (
       ProtocolDefinitions(
-      ClassDefinition(nameDog, tpeDog, clsDog, companionDog, dogParents)
-        :: ClassDefinition(namePersianCat, tpePersianCat, clsPersianCat, companionPersianCat, persianCatParents)
-        :: ADT(namePet, tpePet, trtPet, companionPet) :: ADT(nameCat, tpeCat, trtCat, companionCat) :: Nil,
-      _,
-      _,
-      _
+        ClassDefinition(nameDog, tpeDog, clsDog, companionDog, dogParents)
+          :: ClassDefinition(namePersianCat, tpePersianCat, clsPersianCat, companionPersianCat, persianCatParents)
+          :: ADT(namePet, tpePet, trtPet, companionPet) :: ADT(nameCat, tpeCat, trtCat, companionCat) :: Nil,
+        _,
+        _,
+        _
       ),
       _,
       _
-      ) = runSwaggerSpec(swagger)(Context.empty, AkkaHttp, defaults.akkaGeneratorSettings)
+    ) = runSwaggerSpec(swagger)(Context.empty, AkkaHttp, defaults.akkaGeneratorSettings)
 
     it("should generate right case class") {
       clsPersianCat.structure shouldBe q"""case class PersianCat(catBreed: String) extends Cat""".structure

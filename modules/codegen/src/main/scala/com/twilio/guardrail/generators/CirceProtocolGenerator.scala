@@ -1,7 +1,7 @@
 package com.twilio.guardrail
 package generators
 
-import _root_.io.swagger.models.{ ArrayModel, Model, ModelImpl, RefModel }
+import _root_.io.swagger.models.{ ArrayModel, ComposedModel, Model, ModelImpl, RefModel }
 import _root_.io.swagger.models.properties._
 import cats.implicits._
 import cats.~>
@@ -172,8 +172,7 @@ object CirceProtocolGenerator {
         )
         val code = parentNameOpt
           .fold(q"""case class ${Type.Name(clsName)}(..${terms})""")(
-            parentName =>
-              q"""case class ${Type.Name(clsName)}(..${terms}) extends ${template"${init"${Type.Name(parentName)}(...$Nil)"}"}"""
+            parentName => q"""case class ${Type.Name(clsName)}(..${terms}) extends ${template"${init"${Type.Name(parentName)}(...$Nil)"}"}"""
           )
 
         Target.pure(code)
@@ -326,6 +325,11 @@ object CirceProtocolGenerator {
             entries <- definitions.traverse {
               case (clsName, impl: ModelImpl) if (Option(impl.getProperties()).isDefined || Option(impl.getEnum()).isDefined) =>
                 Target.pure((clsName, SwaggerUtil.Resolved(Type.Name(clsName), None, None): SwaggerUtil.ResolvedType))
+              case (clsName, comp: ComposedModel) =>
+                val parentSimpleRef: Option[String]        = comp.getInterfaces.asScala.headOption.map(_.getSimpleRef)
+                val parentTerm                             = parentSimpleRef.map(n => Term.Name(n))
+                val resolvedType: SwaggerUtil.ResolvedType = SwaggerUtil.Resolved(Type.Name(clsName), parentTerm, None)
+                Target.pure((clsName, resolvedType))
               case (clsName, definition) =>
                 SwaggerUtil
                   .modelMetaType(definition)
@@ -431,8 +435,7 @@ object CirceProtocolGenerator {
 
         Target.pure(
           parentNameOpt.fold(q"""trait ${Type.Name(className)} {..${testTerms}}""")(
-            parentName =>
-              q"""trait ${Type.Name(className)} extends ${template"${init"${Type.Name(parentName)}(...$Nil)"}{..${testTerms}}"} """
+            parentName => q"""trait ${Type.Name(className)} extends ${template"${init"${Type.Name(parentName)}(...$Nil)"}{..${testTerms}}"} """
           )
         )
 

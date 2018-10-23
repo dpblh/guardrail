@@ -1,6 +1,6 @@
 package com.twilio.guardrail.protocol.terms.protocol
 
-import _root_.io.swagger.models.ModelImpl
+import _root_.io.swagger.models.Model
 import _root_.io.swagger.models.properties.Property
 import cats.InjectK
 import cats.free.Free
@@ -10,7 +10,7 @@ import com.twilio.guardrail.generators.GeneratorSettings
 import scala.meta._
 
 class ModelProtocolTerms[F[_]](implicit I: InjectK[ModelProtocolTerm, F]) {
-  def extractProperties(swagger: ModelImpl): Free[F, Either[String, List[(String, Property)]]] =
+  def extractProperties(swagger: Model): Free[F, List[(String, Property)]] =
     Free.inject[ModelProtocolTerm, F](ExtractProperties(swagger))
   def transformProperty(clsName: String, needCamelSnakeConversion: Boolean, concreteTypes: List[PropMeta])(
       name: String,
